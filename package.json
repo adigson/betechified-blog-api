@@ -1,0 +1,20 @@
+{
+  "name": "betechified-blog-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Blog API for the BeTechified assignment",
+  "main": "models/app.js",
+  "scripts": {
+    "start": "node models/app.js",
+    "seed": "node models/seed.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "mongoose": "^8.9.5"
+  }
+}

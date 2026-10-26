@@ -1,0 +1,81 @@
+{
+  "info": {
+    "_postman_id": "d928de76-c8d8-4a43-995f-82dbf6bb547b",
+    "name": "BeTechified Blog API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "articleId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create article",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Postman API article\",\"content\":\"Created while testing the blog API CRUD endpoints.\",\"author\":\"Postman\",\"tags\":[\"test\",\"api\"]}"
+        },
+        "url": "{{baseUrl}}/articles"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Created with 201', () => pm.response.to.have.status(201));",
+            "const article = pm.response.json();",
+            "pm.collectionVariables.set('articleId', article._id);"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Get all articles",
+      "request": { "method": "GET", "url": "{{baseUrl}}/articles" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Returns 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "Get created article",
+      "request": { "method": "GET", "url": "{{baseUrl}}/articles/{{articleId}}" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Returns 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "Search articles",
+      "request": { "method": "GET", "url": "{{baseUrl}}/articles/search?q=blog" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Search returns 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "Reject invalid article",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"title\":\"x\",\"content\":\"short\"}" },
+        "url": "{{baseUrl}}/articles"
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Validation rejects bad input', () => pm.response.to.have.status(400));"] } }]
+    },
+    {
+      "name": "Update created article",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"title\":\"Updated Postman article\",\"content\":\"Updated in the Postman CRUD test collection.\",\"author\":\"Postman\",\"tags\":[\"updated\"]}" },
+        "url": "{{baseUrl}}/articles/{{articleId}}"
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Updated with 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "Delete created article",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/articles/{{articleId}}" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Deleted with 200', () => pm.response.to.have.status(200));"] } }]
+    },
+    {
+      "name": "Confirm deleted article is missing",
+      "request": { "method": "GET", "url": "{{baseUrl}}/articles/{{articleId}}" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Returns 404 after deletion', () => pm.response.to.have.status(404));"] } }]
+    }
+  ]
+}
